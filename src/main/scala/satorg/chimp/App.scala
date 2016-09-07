@@ -6,6 +6,7 @@ import scala.scalajs.js.JSApp
 
 object App extends JSApp {
   private val canvas = dom.document.getElementById("canvas").asInstanceOf[dom.html.Canvas]
+
   private val ctx = canvas.getContext("2d").asInstanceOf[dom.CanvasRenderingContext2D]
 
   private val (canvasWidth, canvasHeight) = (canvas.width, canvas.height)
@@ -26,12 +27,20 @@ object App extends JSApp {
   private val colCount = canvasWidth / cellSize
   private val rowCount = canvasHeight / cellSize
 
-  private def newState() = State(colCount, rowCount)
+  private var level: Int = 9
+  private var state: State = newState()
 
-  var state = newState()
+  private def newState() = State(colCount, rowCount, level)
 
   override def main(): Unit = {
     canvas.onclick = onClickCanvas _
+
+    for (level <- 3 to 9) {
+      dom.document.
+        getElementById(s"level$level").
+        asInstanceOf[dom.html.Button].
+        onclick = onClickLevel(_: dom.MouseEvent, level)
+    }
 
     ctx.font = s"bold ${cellSize}px sans-serif"
     ctx.textAlign = "center"
@@ -84,5 +93,11 @@ object App extends JSApp {
       state = state.fail()
       drawState()
     }
+  }
+
+  private def onClickLevel(ev: dom.MouseEvent, newLevel: Int): Unit = {
+    level = newLevel
+    state = newState()
+    drawState()
   }
 }

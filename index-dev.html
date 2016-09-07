@@ -6,17 +6,40 @@
     <style>
         body {
             background-color: DarkSlateGray;
+            margin: 0;
+        }
+        .levels {
+            margin: 10px 0;
+            text-align: center;
+        }
+        .levels button {
+            font-family: sans-serif;
+            font-weight: bold;
+            font-size: 70px;
+            width: 100px;
+            height: 100px;
+            margin: 0 5px;
         }
         #canvas {
             display: block;
             margin: auto;
-            border: 0;
             background-color: MidnightBlue;
         }
     </style>
 </head>
 <body>
-<canvas id="canvas" width="800" height="600">PLEASE ENABLE JAVASCRIPT</canvas>
+<div class="levels">
+    <button id="level3">3</button>
+    <button id="level4">4</button>
+    <button id="level5">5</button>
+    <button id="level6">6</button>
+    <button id="level7">7</button>
+    <button id="level8">8</button>
+    <button id="level9">9</button>
+</div>
+<div>
+    <canvas id="canvas" width="800" height="600">PLEASE ENABLE JAVASCRIPT</canvas>
+</div>
 <script type="text/javascript" src="./target/scala-2.11/chimpanzee-memory-jsdeps.js"></script>
 <script type="text/javascript" src="./target/scala-2.11/chimpanzee-memory-fastopt.js"></script>
 <script type="text/javascript" src="./target/scala-2.11/chimpanzee-memory-launcher.js"></script>

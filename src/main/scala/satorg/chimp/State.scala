@@ -26,9 +26,9 @@ class State(val numberPositions: List[(Int, Int)], val nextNumber: Int = 1, val 
 object State {
   private val random = new Random
 
-  private def generateNumberPositions(colCount: Int, rowCount: Int): List[(Int, Int)] = {
+  private def generateNumberPositions(colCount: Int, rowCount: Int, level: Int): List[(Int, Int)] = {
     val numbers = mutable.ListBuffer.empty[(Int, Int)]
-    for (order <- 1 to 9) {
+    for (order <- 1 to level) {
       numbers +=
         Stream.
           continually {(random.nextInt(colCount), random.nextInt(rowCount))}.
@@ -38,6 +38,6 @@ object State {
     numbers.result()
   }
 
-  def apply(colCount: Int, rowCount: Int): State =
-    new State(generateNumberPositions(colCount, rowCount), nextNumber = 1, isFailed = false)
+  def apply(colCount: Int, rowCount: Int, level: Int): State =
+    new State(generateNumberPositions(colCount, rowCount, level), nextNumber = 1, isFailed = false)
 }
