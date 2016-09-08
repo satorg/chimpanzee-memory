@@ -51,7 +51,7 @@ object App extends JSApp {
 
   private def drawState(): Unit = {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
-    ctx.fillStyle = if (state.isFailed) "Red" else "White"
+    ctx.fillStyle = if (state.isFailed) "Red" else "Beige"
 
     if (state.nextNumber == 1 || state.isFailed)
       for (((col, row), index) <- state.numberPositions.zipWithIndex) {
