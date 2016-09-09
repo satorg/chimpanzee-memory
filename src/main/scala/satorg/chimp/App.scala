@@ -27,19 +27,18 @@ object App extends JSApp {
   private val colCount = canvasWidth / cellSize
   private val rowCount = canvasHeight / cellSize
 
-  private var level: Int = 9
+  private var currentLevel: Int = 9
   private var state: State = newState()
 
-  private def newState() = State(colCount, rowCount, level)
+  private def newState() = State(colCount, rowCount, currentLevel)
+
+  private def getButton(level: Int) = dom.document.getElementById(s"level$level").asInstanceOf[dom.html.Button]
 
   override def main(): Unit = {
     canvas.onclick = onClickCanvas _
 
     for (level <- 3 to 9) {
-      dom.document.
-        getElementById(s"level$level").
-        asInstanceOf[dom.html.Button].
-        onclick = onClickLevel(_: dom.MouseEvent, level)
+      getButton(level).onclick = onClickLevel(_: dom.MouseEvent, level)
     }
 
     ctx.font = s"bold ${cellSize}px sans-serif"
@@ -96,7 +95,9 @@ object App extends JSApp {
   }
 
   private def onClickLevel(ev: dom.MouseEvent, newLevel: Int): Unit = {
-    level = newLevel
+    getButton(currentLevel).parentElement.className = ""
+    getButton(newLevel).parentElement.className = "active"
+    currentLevel = newLevel
     state = newState()
     drawState()
   }

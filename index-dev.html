@@ -10,7 +10,7 @@
         }
         #levels {
             margin: 0;
-            border: 1px solid black;
+            border: 0;
             text-align: center;
         }
         #levels span {
@@ -29,9 +29,12 @@
             font-size: 70px;
             width: 100px;
             height: 100px;
-            color: MidnightBlue;
+            color: DarkSlateGray;
             background-color: Beige;
             border: 0;
+        }
+        #levels span.active button {
+            color: MidnightBlue;
         }
         #canvas {
             display: block;
@@ -39,7 +42,6 @@
             background-color: MidnightBlue;
             border: 2px solid Beige;
         }
-
     </style>
 </head>
 <body>
@@ -51,7 +53,7 @@
     --><span><button id="level6">6</button></span><!--
     --><span><button id="level7">7</button></span><!--
     --><span><button id="level8">8</button></span><!--
-    --><span><button id="level9">9</button></span><!--
+    --><span class="active"><button id="level9">9</button></span><!--
     -->
 </div>
 <div>
