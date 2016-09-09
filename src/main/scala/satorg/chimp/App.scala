@@ -27,8 +27,8 @@ object App extends JSApp {
   private val colCount = canvasWidth / cellSize
   private val rowCount = canvasHeight / cellSize
 
-  private var currentLevel: Int = 9
-  private var state: State = newState()
+  private var currentLevel: Int = _
+  private var state: State = _
 
   private def newState() = State(colCount, rowCount, currentLevel)
 
@@ -38,8 +38,13 @@ object App extends JSApp {
     canvas.onclick = onClickCanvas _
 
     for (level <- 3 to 9) {
-      getButton(level).onclick = onClickLevel(_: dom.MouseEvent, level)
+      val btn = getButton(level)
+
+      btn.onclick = onClickLevel(_: dom.MouseEvent, level)
+      if (btn.parentElement.className == "active")
+        currentLevel = level
     }
+    state = newState()
 
     ctx.font = s"bold ${cellSize}px sans-serif"
     ctx.textAlign = "center"
