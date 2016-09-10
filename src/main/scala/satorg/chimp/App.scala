@@ -27,6 +27,11 @@ object App extends JSApp {
   private val colCount = canvasWidth / cellSize
   private val rowCount = canvasHeight / cellSize
 
+  private val viewWidth = colCount * cellSize
+  private val viewHeight = rowCount * cellSize
+  private val viewX = (canvasWidth - viewWidth) / 2
+  private val viewY = (canvasHeight - viewHeight) / 2
+
   private var currentLevel: Int = 9
   private var state: State = newState()
 
@@ -57,6 +62,8 @@ object App extends JSApp {
     ctx.clearRect(0, 0, canvasWidth, canvasHeight)
     ctx.fillStyle = if (state.isFailed) "Red" else "Beige"
 
+    ctx.setTransform(1, 0, 0, 1, viewX, viewY)
+
     if (state.nextNumber == 1 || state.isFailed)
       for (((col, row), index) <- state.numberPositions.zipWithIndex) {
         val numStr = (index + state.nextNumber).toString
@@ -79,23 +86,25 @@ object App extends JSApp {
     if (state.isFinished) {
       state = newState()
       drawState()
-      return
     }
-
-    val clickedPos = {
+    else {
       val rect = canvas.getBoundingClientRect()
-      val evX = (ev.clientX - rect.left).toInt
-      val evY = (ev.clientY - rect.top).toInt
-      (evX / cellSize, evY / cellSize)
-    }
+      val evX = (ev.clientX - rect.left - viewX).toInt
+      val evY = (ev.clientY - rect.top - viewY).toInt
 
-    if (state.numberPositions.head == clickedPos) {
-      state = state.dropNumber()
-      drawState()
-    }
-    else if (state.numberPositions.tail.contains(clickedPos)) {
-      state = state.fail()
-      drawState()
+      if (evX < 0 || evX >= viewWidth || evY < 0 || evY >= viewHeight)
+        None
+      else
+        Some((evX / cellSize, evY / cellSize))
+    }.foreach { clickedPos =>
+      if (state.numberPositions.head == clickedPos) {
+        state = state.dropNumber()
+        drawState()
+      }
+      else if (state.numberPositions.tail.contains(clickedPos)) {
+        state = state.fail()
+        drawState()
+      }
     }
   }
 
