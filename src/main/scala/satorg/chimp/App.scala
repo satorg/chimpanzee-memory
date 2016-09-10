@@ -3,18 +3,21 @@ package satorg.chimp
 import org.scalajs.dom
 
 import scala.scalajs.js.JSApp
+import scala.util.Try
 
 object App extends JSApp {
-  private val canvas = dom.document.getElementById("canvas").asInstanceOf[dom.html.Canvas]
-
-  private val ctx = canvas.getContext("2d").asInstanceOf[dom.CanvasRenderingContext2D]
-
-  private val (canvasWidth, canvasHeight) = (canvas.width, canvas.height)
+  private final val minLevel = 3
+  private final val maxLevel = 9
 
   private final val minCellCount = 5
 
   private final val cellBorder = 2
   private final val cellBorderDual = cellBorder * 2
+
+  private val canvas = dom.document.getElementById("canvas").asInstanceOf[dom.html.Canvas]
+  private val ctx = canvas.getContext("2d").asInstanceOf[dom.CanvasRenderingContext2D]
+
+  private val (canvasWidth, canvasHeight) = (canvas.width, canvas.height)
 
   private val cellSize = {
     val maxCellWidth = (canvasWidth / minCellCount) >> 1 << 1
@@ -32,7 +35,12 @@ object App extends JSApp {
   private val viewX = (canvasWidth - viewWidth) / 2
   private val viewY = (canvasHeight - viewHeight) / 2
 
-  private var currentLevel: Int = 9
+  private var currentLevel: Int =
+    Option(dom.window.localStorage.getItem("level")).
+      flatMap { levelStr => Try {levelStr.toInt}.toOption }.
+      filter { level => level >= minLevel && level <= maxLevel }.
+      getOrElse(maxLevel)
+
   private var state: State = newState()
 
   private def newState() = State(colCount, rowCount, currentLevel)
@@ -41,7 +49,7 @@ object App extends JSApp {
 
   override def main(): Unit = {
 
-    for (level <- 3 to 9) {
+    for (level <- minLevel to maxLevel) {
       val btn = getButton(level)
 
       btn.onclick = onClickLevel(_: dom.MouseEvent, level)
@@ -105,8 +113,11 @@ object App extends JSApp {
   }
 
   private def onClickLevel(ev: dom.MouseEvent, newLevel: Int): Unit = {
+    dom.window.localStorage.setItem("level", newLevel.toString)
+
     getButton(currentLevel).parentElement.className = ""
     getButton(newLevel).parentElement.className = "active"
+
     currentLevel = newLevel
     state = newState()
     drawState()
