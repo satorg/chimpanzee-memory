@@ -27,24 +27,24 @@ object App extends JSApp {
   private val colCount = canvasWidth / cellSize
   private val rowCount = canvasHeight / cellSize
 
-  private var currentLevel: Int = _
-  private var state: State = _
+  private var currentLevel: Int = 9
+  private var state: State = newState()
 
   private def newState() = State(colCount, rowCount, currentLevel)
 
   private def getButton(level: Int) = dom.document.getElementById(s"level$level").asInstanceOf[dom.html.Button]
 
   override def main(): Unit = {
-    canvas.onclick = onClickCanvas _
 
     for (level <- 3 to 9) {
       val btn = getButton(level)
 
       btn.onclick = onClickLevel(_: dom.MouseEvent, level)
-      if (btn.parentElement.className == "active")
-        currentLevel = level
+      if (level == currentLevel)
+        btn.parentElement.className = "active"
     }
-    state = newState()
+
+    canvas.onclick = onClickCanvas _
 
     ctx.font = s"bold ${cellSize}px sans-serif"
     ctx.textAlign = "center"
