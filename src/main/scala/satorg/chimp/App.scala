@@ -97,12 +97,8 @@ object App extends JSApp {
       else
         Some((evX / cellSize, evY / cellSize))
     }.foreach { clickedPos =>
-      if (state.numberPositions.head == clickedPos) {
-        state = state.dropNumber()
-        drawState()
-      }
-      else if (state.numberPositions.tail.contains(clickedPos)) {
-        state = state.fail()
+      state.clickPosition(clickedPos).foreach { newState =>
+        state = newState
         drawState()
       }
     }

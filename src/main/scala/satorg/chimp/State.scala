@@ -3,18 +3,19 @@ package satorg.chimp
 import scala.collection.mutable
 import scala.util.Random
 
-class State(val numberPositions: List[(Int, Int)], val nextNumber: Int = 1, val isFailed: Boolean = false) {
+class State private(val numberPositions: List[(Int, Int)], val nextNumber: Int, val isFailed: Boolean) {
 
   def isFinished = numberPositions.isEmpty || isFailed
 
-  def fail(): State = copy(isFailed = true)
+  def clickPosition(pos: (Int, Int)): Option[State] = {
+    assert(!isFinished, "`State` is finished")
 
-  def dropNumber(): State = {
-    if (isFailed) this
-    else
-      copy(
-        numberPositions = numberPositions.tail,
-        nextNumber = nextNumber + 1)
+    PartialFunction.condOpt(numberPositions) {
+      case `pos` :: tailPositions =>
+        copy(numberPositions = tailPositions, nextNumber = nextNumber + 1)
+      case _ :: tailPositions if tailPositions.contains(pos) =>
+        copy(isFailed = true)
+    }
   }
 
   private def copy(numberPositions: List[(Int, Int)] = this.numberPositions,
