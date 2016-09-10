@@ -41,9 +41,9 @@ object App extends JSApp {
       filter { level => level >= minLevel && level <= maxLevel }.
       getOrElse(maxLevel)
 
-  private var state: State = newState()
+  private var state: State = createState()
 
-  private def newState() = State(colCount, rowCount, currentLevel)
+  private def createState() = State(colCount, rowCount, currentLevel)
 
   private def getButton(level: Int) = dom.document.getElementById(s"level$level").asInstanceOf[dom.html.Button]
 
@@ -92,7 +92,7 @@ object App extends JSApp {
 
   private def onClickCanvas(ev: dom.MouseEvent): Unit = {
     if (state.isFinished) {
-      state = newState()
+      state = createState()
       drawState()
     }
     else {
@@ -119,7 +119,7 @@ object App extends JSApp {
     getButton(newLevel).parentElement.className = "active"
 
     currentLevel = newLevel
-    state = newState()
+    state = createState()
     drawState()
   }
 }
